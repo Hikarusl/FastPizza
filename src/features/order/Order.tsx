@@ -1,24 +1,19 @@
 // Test ID: IIDSAT
-import {
-  calcMinutesLeft,
-  formatCurrency,
-  formatDate,
-} from "../../utils/helpers";
-import {getOrder} from "../../services/apiRestaurant";
-import {useLoaderData} from "react-router";
+import { calcMinutesLeft, formatCurrency, formatDate } from '../../utils/helpers'
+import { getOrder } from '../../services/apiRestaurant'
+import { useLoaderData } from 'react-router'
+import type {OrderType} from '../../types/order.ts'
 
 function Order() {
-  const order = useLoaderData();
+  const order: OrderType = useLoaderData()
   const {
-    // id,
     status,
     priority,
     priorityPrice,
     orderPrice,
     estimatedDelivery,
-    // cart,
-  } = order;
-  const deliveryIn = calcMinutesLeft(estimatedDelivery);
+  } = order
+  const deliveryIn = calcMinutesLeft(estimatedDelivery)
 
   return (
     <div>
@@ -35,7 +30,7 @@ function Order() {
         <p>
           {deliveryIn >= 0
             ? `Only ${calcMinutesLeft(estimatedDelivery)} minutes left 😃`
-            : "Order should have arrived"}
+            : 'Order should have arrived'}
         </p>
         <p>(Estimated delivery: {formatDate(estimatedDelivery)})</p>
       </div>
@@ -46,11 +41,11 @@ function Order() {
         <p>To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}</p>
       </div>
     </div>
-  );
+  )
 }
 
-export async function loader({params}) {
-  return await getOrder(params.orderId);
+export async function loader({ params }) {
+  return await getOrder(params.orderId)
 }
 
-export default Order;
+export default Order

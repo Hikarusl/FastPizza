@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link } from 'react-router'
 
 // const fakeCart = [
 //   {
@@ -38,7 +38,7 @@ function Cart() {
         <button>Clear cart</button>
       </div>
     </div>
-  );
+  )
 }
 
-export default Cart;
+export default Cart

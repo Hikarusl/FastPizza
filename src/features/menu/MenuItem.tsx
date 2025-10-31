@@ -1,8 +1,12 @@
-import {formatCurrency} from '../../utils/helpers'
+import { formatCurrency } from '../../utils/helpers'
+import type {Pizza} from "../../types/pizza.ts";
 
+interface MenuItemProps {
+  pizza: Pizza;
+}
 
-function MenuItem({ pizza }) {
-  const { name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
+function MenuItem({ pizza }: MenuItemProps) {
+  const { name, unitPrice, ingredients, soldOut, imageUrl } = pizza
 
   return (
     <li>
@@ -10,12 +14,10 @@ function MenuItem({ pizza }) {
       <div>
         <p>{name}</p>
         <p>{ingredients.join(', ')}</p>
-        <div>
-          {!soldOut ? <p>{formatCurrency(unitPrice)}</p> : <p>Sold out</p>}
-        </div>
+        <div>{!soldOut ? <p>{formatCurrency(unitPrice)}</p> : <p>Sold out</p>}</div>
       </div>
     </li>
-  );
+  )
 }
 
-export default MenuItem;
+export default MenuItem

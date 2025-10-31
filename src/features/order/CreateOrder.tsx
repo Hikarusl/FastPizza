@@ -1,51 +1,50 @@
-import { useState } from "react";
-import {Form, redirect, useActionData} from "react-router";
-import {createOrder} from "../../services/apiRestaurant";
+import { useState } from 'react'
+import { Form, redirect, useActionData, useNavigation } from 'react-router'
+import { createOrder } from '../../services/apiRestaurant'
+import type {Cart} from "../../types/cart.ts";
 
 // https://uibakery.io/regex-library/phone-number
-const isValidPhone = (str) =>
-  /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
-    str
-  );
+const isValidPhone = (phone: string): boolean => {
+  return  /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(phone)
+}
 
-
-const fakeCart = [
+const fakeCart: Cart =  [
   {
     pizzaId: 12,
-    name: "Mediterranean",
+    name: 'Mediterranean',
     quantity: 2,
     unitPrice: 16,
     totalPrice: 32,
   },
   {
     pizzaId: 6,
-    name: "Vegetable",
+    name: 'Vegetable',
     quantity: 1,
     unitPrice: 13,
     totalPrice: 13,
   },
   {
     pizzaId: 11,
-    name: "Spinach and Mushroom",
+    name: 'Spinach and Mushroom',
     quantity: 1,
     unitPrice: 15,
     totalPrice: 15,
   },
-];
+]
 
 function CreateOrder() {
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state === 'submitting';
+  const navigation = useNavigation()
+  const isSubmitting = navigation.state === 'submitting'
   const formErrors = useActionData()
 
-  const [withPriority, setWithPriority] = useState(false);
-  const cart = fakeCart;
+  const [withPriority, setWithPriority] = useState(false)
+  const cart = fakeCart
 
   return (
     <div>
       <h2>Ready to order? Let's go!</h2>
 
-      <Form method="POST" >
+      <Form method="POST">
         <div>
           <label htmlFor="customer">First Name</label>
           <input type="text" name="customer" required />
@@ -54,19 +53,13 @@ function CreateOrder() {
         <div>
           <label htmlFor="phone">Phone number</label>
           <div>
-            <input
-              type="tel"
-              name="phone"
-              aria-describedby="phone-error"
-              required />
+            <input type="tel" name="phone" aria-describedby="phone-error" required />
           </div>
-          {formErrors?.phone &&
-            <p
-              role="alert"
-              id="phone-error"
-            >
+          {formErrors?.phone && (
+            <p role="alert" id="phone-error">
               {formErrors.phone}
-            </p>}
+            </p>
+          )}
         </div>
 
         <div>
@@ -82,29 +75,25 @@ function CreateOrder() {
             name="priority"
             id="priority"
             value={withPriority}
-            onChange={(e) => setWithPriority(e.target.checked)}
+            onChange={e => setWithPriority(e.target.checked)}
           />
           <label htmlFor="priority">Want to yo give your order priority?</label>
         </div>
 
         <div>
-          <input
-            type="hidden"
-            name="cart"
-            value={JSON.stringify(cart)}
-          />
+          <input type="hidden" name="cart" value={JSON.stringify(cart)} />
           <button disabled={isSubmitting}>
             {isSubmitting ? 'Placing order....' : 'Order now'}
           </button>
         </div>
       </Form>
     </div>
-  );
+  )
 }
 
-export async function action({request}) {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData);
+export async function action({ request }) {
+  const formData = await request.formData()
+  const data = Object.fromEntries(formData)
   const order = {
     ...data,
     cart: JSON.parse(data.cart),
@@ -113,14 +102,14 @@ export async function action({request}) {
 
   const errors = {}
   if (!isValidPhone(order.phone)) {
-    errors.phone = 'Please enter valid phone number';
+    errors.phone = 'Please enter valid phone number'
   }
   if (Object.keys(errors).length > 0) {
-    return errors;
+    return errors
   }
 
   const newOrder = await createOrder(order)
   console.log(newOrder)
   return redirect(`/order/${newOrder.id}`)
 }
-export default CreateOrder;
+export default CreateOrder
