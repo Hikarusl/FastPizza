@@ -1,4 +1,5 @@
 import {type FormEvent, useState} from 'react'
+import Button from "../../ui/Button.tsx";
 
 function CreateUser() {
   const [username, setUsername] = useState('')
@@ -12,6 +13,7 @@ function CreateUser() {
       <p>👋 Welcome! Please start by telling us your name:</p>
 
       <input
+        className='input w-72 mb-8'
         type="text"
         placeholder="Your full name"
         value={username}
@@ -20,7 +22,7 @@ function CreateUser() {
 
       {username !== '' && (
         <div>
-          <button>Start ordering</button>
+          <Button>Start ordering</Button>
         </div>
       )}
     </form>

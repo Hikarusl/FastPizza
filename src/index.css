@@ -1,19 +1,35 @@
 @import 'tailwindcss';
 
+@theme {
+  --font-sans: "Roboto Mono", monospace;
+  --text-huge: 80rem;
+  --text-huge--line-height: 1;
+}
+
+/* Применяем глобальные стили через base layer */
+@layer base {
+  html {
+    font-family: var(--font-sans),  "Roboto", sans-serif;
+    height: 100dvh;
+  }
+}
+
 @layer components {
   .input {
     @apply rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 placeholder:text-stone-400 focus:ring focus:ring-yellow-400 focus:outline-none md:px-6 md:py-3;
   }
 
-  /* https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */
   .loader {
     width: 45px;
     aspect-ratio: 0.75;
-    --c: no-repeat linear-gradient(theme(colors.stone.800) 0 0);
+
+    --c: no-repeat linear-gradient(to bottom, theme(colors.stone.800), theme(colors.stone.800));
+
     background:
-      var(--c) 0% 50%,
-      var(--c) 50% 50%,
-      var(--c) 100% 50%;
+      var(--c) 0 center,
+      var(--c) 50% center,
+      var(--c) 100% center;
+
     background-size: 20% 50%;
     animation: loading 1s infinite linear;
   }
@@ -21,27 +37,27 @@
   @keyframes loading {
     20% {
       background-position:
-        0% 0%,
-        50% 50%,
-        100% 50%;
+        0 top,
+        50% center,
+        100% center;
     }
     40% {
       background-position:
-        0% 100%,
-        50% 0%,
-        100% 50%;
+        0 bottom,
+        50% top,
+        100% center;
     }
     60% {
       background-position:
-        0% 50%,
-        50% 100%,
-        100% 0%;
+        0 center,
+        50% bottom,
+        100% top;
     }
     80% {
       background-position:
-        0% 50%,
-        50% 50%,
-        100% 100%;
+        0 center,
+        50% center,
+        100% bottom;
     }
   }
 }

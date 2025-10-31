@@ -1,4 +1,4 @@
-export interface CartItem {
+export interface CartItemType {
   pizzaId: number
   name: string
   quantity: number
@@ -6,4 +6,4 @@ export interface CartItem {
   totalPrice: number
 }
 
-export type Cart = CartItem[]
+export type CartType = CartItemType[]

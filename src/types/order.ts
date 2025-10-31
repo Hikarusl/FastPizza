@@ -1,4 +1,4 @@
-import type {Cart} from "./cart.ts";
+import type {CartType} from "./cart.ts";
 
 export interface OrderType {
   id: string;
@@ -7,6 +7,12 @@ export interface OrderType {
   priorityPrice: number;
   orderPrice: number;
   estimatedDelivery: string;
-  cart: Cart,
+  cart: CartType,
 }
 
+export interface OrderRequestType {
+  customer: string;
+  phone: string;
+  address: string;
+  cart: CartType;
+}
