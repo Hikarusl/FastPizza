@@ -10,7 +10,7 @@ import Button from '../../ui/Button'
 import type {CartType} from "../../types/cart.ts";
 import type {NewFormOrderType, OrderType} from "../../types/order.ts";
 import {useSelector} from "react-redux";
-import type {RootState} from "../../store.ts";
+import {selectUser} from "../../store/selectors.ts";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (phone: string): boolean => {
@@ -45,7 +45,7 @@ function CreateOrder() {
   const navigation = useNavigation()
   const isSubmitting: boolean = navigation.state === 'submitting'
   const formErrors = useActionData()
-  const username :string = useSelector((state: RootState) => state.user.username)
+  const {username} = useSelector(selectUser);
 
 
   const [withPriority, setWithPriority] = useState<boolean>(false)

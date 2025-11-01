@@ -1,38 +1,18 @@
 import LinkButton from "../../ui/LinkButton.tsx";
 import Button from "../../ui/Button.tsx";
 import CartItem from "./CartItem.tsx";
-import type {CartType} from "../../types/cart.ts";
-import {useSelector} from "react-redux";
-import type {RootState} from "../../store.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {selectCartItems, selectUser} from "../../store/selectors.ts";
+import {clearCart} from "./cartSlice.ts";
+import EmptyCart from "./EmptyCart.tsx";
 
-const fakeCart : CartType = [
-  {
-    pizzaId: 12,
-    name: 'Mediterranean',
-    quantity: 2,
-    unitPrice: 16,
-    totalPrice: 32,
-  },
-  {
-    pizzaId: 6,
-    name: 'Vegetable',
-    quantity: 1,
-    unitPrice: 13,
-    totalPrice: 13,
-  },
-  {
-    pizzaId: 11,
-    name: 'Spinach and Mushroom',
-    quantity: 1,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-];
 
 function Cart() {
-  const cart: CartType = fakeCart;
-  const username :string = useSelector((state: RootState) => state.user.username)
+  const cart = useSelector(selectCartItems);
+  const {username} = useSelector(selectUser);
+  const dispatch = useDispatch();
 
+  if (cart.length === 0) return <EmptyCart />;
 
   return (
     <div className="px-4 py-3">
@@ -56,7 +36,12 @@ function Cart() {
         >
           Order pizzas
         </Button>
-        <Button type="secondary">Clear cart</Button>
+        <Button
+          type="secondary"
+          onClick={()=>dispatch(clearCart())}
+        >
+          Clear cart
+        </Button>
       </div>
     </div>
   )

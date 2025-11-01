@@ -2,15 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import type {CartType} from "../../types/cart.ts";
 
 const initialState: {cart: CartType} = {
-  cart: [
-    {
-      pizzaId: 12,
-      name: 'Mediterranean',
-      quantity: 2,
-      unitPrice: 16,
-      totalPrice: 32,
-    }
-  ],
+  cart: [],
 }
 
 const cartSlice = createSlice({
@@ -52,3 +44,4 @@ const cartSlice = createSlice({
 
 export const { addItem, deleteItem, increaseItemQuantity, decreaseItemQuantity, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
+

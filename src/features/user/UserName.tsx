@@ -1,8 +1,8 @@
 import {useSelector} from "react-redux";
-import type {RootState} from "../../store.ts";
+import {selectUser} from "../../store/selectors.ts";
 
 const UserName = () => {
-  const username: string = useSelector((state: RootState) => state.user.username)
+  const {username} = useSelector(selectUser);
 
   if (!username) return null;
   return (

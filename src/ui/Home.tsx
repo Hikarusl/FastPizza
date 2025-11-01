@@ -1,10 +1,10 @@
 import CreateUser from '../features/user/CreateUser'
-import type {RootState} from "../store.ts";
 import {useSelector} from "react-redux";
 import Button from "./Button.tsx";
+import {selectUser} from "../store/selectors.ts";
 
 function Home() {
-  const username :string = useSelector((state: RootState) => state.user.username)
+  const {username} = useSelector(selectUser);
 
 
   return (
