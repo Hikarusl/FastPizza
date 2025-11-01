@@ -7,49 +7,35 @@ import {
 } from 'react-router'
 import { createOrder } from '../../services/apiRestaurant'
 import Button from '../../ui/Button'
-import type {CartType} from "../../types/cart.ts";
 import type {NewFormOrderType, OrderType} from "../../types/order.ts";
 import {useSelector} from "react-redux";
-import {selectUser} from "../../store/selectors.ts";
+import {
+  getTotalPrice,
+  selectCartItems,
+  selectUser
+} from "../../store/selectors.ts";
+import EmptyCart from "../cart/EmptyCart.tsx";
+import {formatCurrency} from "../../utils/helpers.ts";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (phone: string): boolean => {
   return  /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(phone)
 }
 
-const fakeCart: CartType =  [
-  {
-    pizzaId: 12,
-    name: 'Mediterranean',
-    quantity: 2,
-    unitPrice: 16,
-    totalPrice: 32,
-  },
-  {
-    pizzaId: 6,
-    name: 'Vegetable',
-    quantity: 1,
-    unitPrice: 13,
-    totalPrice: 13,
-  },
-  {
-    pizzaId: 11,
-    name: 'Spinach and Mushroom',
-    quantity: 1,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-]
-
 function CreateOrder() {
   const navigation = useNavigation()
   const isSubmitting: boolean = navigation.state === 'submitting'
   const formErrors = useActionData()
   const {username} = useSelector(selectUser);
-
-
   const [withPriority, setWithPriority] = useState<boolean>(false)
-  const cart: CartType = fakeCart
+  const cart = useSelector(selectCartItems)
+
+  const totalCartPrice = useSelector(getTotalPrice);
+  const priorityPrice: number  = 0.2
+  const finalPrice = totalCartPrice * (1 + priorityPrice * Number(withPriority))
+
+
+  if (cart.length === 0) return <EmptyCart />
 
   return (
     <div className="px-4 py-6">
@@ -109,7 +95,7 @@ function CreateOrder() {
             disabled={isSubmitting}
             type="primary"
           >
-            {isSubmitting ? 'Placing order....' : 'Order now'}
+            {isSubmitting ? 'Placing order....' : `Order now from ${formatCurrency(finalPrice)}`}
           </Button>
         </div>
       </Form>
@@ -121,13 +107,18 @@ export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData) as Record<string, string>;
 
+  console.log(data);
+
   const order: NewFormOrderType = {
     customer: String(data.customer),
     phone: String(data.phone),
     address: String(data.address),
     cart: JSON.parse(data.cart),
-    priority: data.Priority === 'on',
+    priority: data.priority === 'on',
   }
+
+  console.log(order);
+
 
   //Валидация номера телефона
   const errors: Record<string, string> = {}

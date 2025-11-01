@@ -1,5 +1,8 @@
 import type {CartItemType} from "../../types/cart.ts";
 import {formatCurrency} from "../../utils/helpers.ts";
+import {useDispatch} from "react-redux";
+import {useEffect} from "react";
+import {clearCart} from "../cart/cartSlice.ts";
 
 interface OrderItemProps {
   item: CartItemType;
@@ -9,6 +12,11 @@ interface OrderItemProps {
 
 function OrderItem({ item, } : OrderItemProps) {
   const { quantity, name, totalPrice } = item
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearCart());
+  }, [dispatch]);
 
   return (
     <li  className='py-3'>
