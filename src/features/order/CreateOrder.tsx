@@ -9,6 +9,8 @@ import { createOrder } from '../../services/apiRestaurant'
 import Button from '../../ui/Button'
 import type {CartType} from "../../types/cart.ts";
 import type {NewFormOrderType, OrderType} from "../../types/order.ts";
+import {useSelector} from "react-redux";
+import type {RootState} from "../../store.ts";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (phone: string): boolean => {
@@ -43,6 +45,8 @@ function CreateOrder() {
   const navigation = useNavigation()
   const isSubmitting: boolean = navigation.state === 'submitting'
   const formErrors = useActionData()
+  const username :string = useSelector((state: RootState) => state.user.username)
+
 
   const [withPriority, setWithPriority] = useState<boolean>(false)
   const cart: CartType = fakeCart
@@ -60,6 +64,7 @@ function CreateOrder() {
             name="customer"
             required
             className="input grow"
+            defaultValue={username}
           />
         </div>
         {/*phone*/}
@@ -115,6 +120,7 @@ function CreateOrder() {
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData) as Record<string, string>;
+
   const order: NewFormOrderType = {
     customer: String(data.customer),
     phone: String(data.phone),

@@ -1,16 +1,28 @@
 import {type FormEvent, useState} from 'react'
 import Button from "../../ui/Button.tsx";
+import {updateName} from "./userSlice.ts";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router";
 
 function CreateUser() {
   const [username, setUsername] = useState('')
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  function handleSubmit(e: FormEvent) {
+  function handleSubmit(e: FormEvent): void {
     e.preventDefault()
+
+    if (!username) return
+    dispatch(updateName(username))
+    navigate('/menu')
+
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <p>👋 Welcome! Please start by telling us your name:</p>
+      <p className="mb-4 text-sm text-stone-600 md:text-base">
+        👋 Welcome! Please start by telling us your name:
+      </p>
 
       <input
         className='input w-72 mb-8'
