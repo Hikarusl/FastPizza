@@ -16,6 +16,7 @@ import {
 } from "../../store/selectors.ts";
 import EmptyCart from "../cart/EmptyCart.tsx";
 import {formatCurrency} from "../../utils/helpers.ts";
+import UserLocationButton from "../user/UserLocationButton.tsx";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (phone: string): boolean => {
@@ -26,7 +27,10 @@ function CreateOrder() {
   const navigation = useNavigation()
   const isSubmitting: boolean = navigation.state === 'submitting'
   const formErrors = useActionData()
-  const {username} = useSelector(selectUser);
+
+  const {username, status: statusAddress, address, position} = useSelector(selectUser);
+  const isLoadingAddress = statusAddress === 'loading';
+
   const [withPriority, setWithPriority] = useState<boolean>(false)
   const cart = useSelector(selectCartItems)
 
@@ -73,8 +77,25 @@ function CreateOrder() {
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label htmlFor="address" className="sm:basis-40">Address</label>
           <div className="grow">
-            <input type="text" name="address" required  className="input w-full"/>
+            <input
+              disabled={isLoadingAddress}
+              defaultValue={address}
+              type="text"
+              name="address"
+              required
+              className="input w-full"
+            />
+            {statusAddress ==='error' && (
+              <p
+                role="alert"
+                className="mt-2 rounded-md bg-red-100 p-2 text-xs text-red-700"
+              >
+                User denied geolocation
+              </p>
+            )}
           </div>
+          {(!position?.latitude) && <UserLocationButton/>}
+
         </div>
         {/*priority*/}
         <div className="mb-12 flex items-center gap-5">
@@ -107,8 +128,6 @@ export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData) as Record<string, string>;
 
-  console.log(data);
-
   const order: NewFormOrderType = {
     customer: String(data.customer),
     phone: String(data.phone),
@@ -116,9 +135,6 @@ export async function action({ request }: { request: Request }) {
     cart: JSON.parse(data.cart),
     priority: data.priority === 'on',
   }
-
-  console.log(order);
-
 
   //Валидация номера телефона
   const errors: Record<string, string> = {}
