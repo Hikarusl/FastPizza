@@ -1,4 +1,4 @@
-import type {OrderType} from "../types/order.ts";
+import type {NewFormOrderType, OrderType} from "../types/order.ts";
 import type {Pizza} from "../types/pizza.ts";
 
 const API_URL = 'https://react-fast-pizza-api.jonas.io/api'
@@ -20,7 +20,7 @@ export async function getOrder(id: string):Promise<OrderType> {
   return data
 }
 
-export async function createOrder(newOrder:OrderType):Promise<OrderType> {
+export async function createOrder(newOrder: NewFormOrderType):Promise<OrderType> {
   try {
     const res = await fetch(`${API_URL}/order`, {
       method: 'POST',

@@ -1,11 +1,11 @@
 import {type FormEvent, useState} from 'react'
-import { useNavigate } from 'react-router'
+import {type NavigateFunction, useNavigate} from 'react-router'
 
 const SearchOrder = () => {
-  const [query, setQuery] = useState('')
-  const navigate = useNavigate()
+  const [query, setQuery] = useState<string>('')
+  const navigate:NavigateFunction = useNavigate()
 
-  function handleSubmit(event: FormEvent) {
+  function handleSubmit(event: FormEvent):void {
     event.preventDefault()
     if (!query) return
     navigate(`/order/${query}`)

@@ -7,7 +7,7 @@ interface OrderItemProps {
   ingredients?: string[];
 }
 
-function OrderItem({ item, isLoadingIngredients, ingredients } : OrderItemProps) {
+function OrderItem({ item, } : OrderItemProps) {
   const { quantity, name, totalPrice } = item
 
   return (

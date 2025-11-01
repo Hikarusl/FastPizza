@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {
-  ActionFunctionArgs,
   Form,
   redirect,
   useActionData,
@@ -9,6 +8,7 @@ import {
 import { createOrder } from '../../services/apiRestaurant'
 import Button from '../../ui/Button'
 import type {CartType} from "../../types/cart.ts";
+import type {NewFormOrderType, OrderType} from "../../types/order.ts";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (phone: string): boolean => {
@@ -52,6 +52,7 @@ function CreateOrder() {
       <h2 className="mb-8 text-xl font-semibold">Ready to order? Let's go!</h2>
 
       <Form method="POST">
+        {/*name*/}
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label htmlFor="customer" className="sm:basis-40">First Name</label>
           <input
@@ -61,7 +62,7 @@ function CreateOrder() {
             className="input grow"
           />
         </div>
-
+        {/*phone*/}
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label htmlFor="phone" className="sm:basis-40">Phone number</label>
           <div className="grow">
@@ -77,14 +78,14 @@ function CreateOrder() {
             )}
           </div>
         </div>
-
+        {/*address*/}
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label htmlFor="address" className="sm:basis-40">Address</label>
           <div className="grow">
             <input type="text" name="address" required  className="input w-full"/>
           </div>
         </div>
-
+        {/*priority*/}
         <div className="mb-12 flex items-center gap-5">
           <input
             className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-offset-2"
@@ -96,7 +97,7 @@ function CreateOrder() {
           />
           <label className="font-medium" htmlFor="priority">Want to yo give your order priority?</label>
         </div>
-
+        {/*submit*/}
         <div>
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
           <Button
@@ -111,15 +112,18 @@ function CreateOrder() {
   )
 }
 
-export async function action({ request }) {
-  const formData = await request.formData()
-  const data = Object.fromEntries(formData)
-  const order = {
-    ...data,
+export async function action({ request }: { request: Request }) {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData) as Record<string, string>;
+  const order: NewFormOrderType = {
+    customer: String(data.customer),
+    phone: String(data.phone),
+    address: String(data.address),
     cart: JSON.parse(data.cart),
     priority: data.Priority === 'on',
   }
 
+  //Валидация номера телефона
   const errors: Record<string, string> = {}
   if (!isValidPhone(order.phone)) {
     errors.phone = 'Please enter valid phone number'
@@ -128,7 +132,7 @@ export async function action({ request }) {
     return errors
   }
 
-  const newOrder = await createOrder(order)
+  const newOrder: OrderType = await createOrder(order)
   return redirect(`/order/${newOrder.id}`)
 }
 export default CreateOrder

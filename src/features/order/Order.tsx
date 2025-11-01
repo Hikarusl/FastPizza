@@ -1,7 +1,8 @@
 // Test ID: IIDSAT
 import { calcMinutesLeft, formatCurrency, formatDate } from '../../utils/helpers'
 import { getOrder } from '../../services/apiRestaurant'
-import { useLoaderData } from 'react-router'
+import {useLoaderData} from 'react-router'
+import type {LoaderFunctionArgs} from 'react-router'
 import type {OrderType} from '../../types/order.ts'
 import OrderItem from "./OrderItem.tsx";
 
@@ -75,8 +76,12 @@ function Order() {
   )
 }
 
-export async function loader({ params } :{params: {orderId: string}}) {
-  return await getOrder(params.orderId)
+export async function loader({ params } :LoaderFunctionArgs):Promise<OrderType> {
+  const { orderId } = params;
+  if (!orderId) {
+    throw new Response("Order ID is missing", { status: 400 });
+  }
+  return await getOrder(orderId)
 }
 
 export default Order
