@@ -1,11 +1,10 @@
 import CreateUser from '../features/user/CreateUser'
-import {useSelector} from "react-redux";
-import Button from "./Button.tsx";
-import {selectUser} from "../store/selectors.ts";
+import { useSelector } from 'react-redux'
+import Button from './Button.tsx'
+import { selectUser } from '../store/selectors.ts'
 
 function Home() {
-  const {username} = useSelector(selectUser);
-
+  const { username } = useSelector(selectUser)
 
   return (
     <div className="my-10 px-4 text-center sm:my-16">
@@ -14,11 +13,7 @@ function Home() {
         <br />
         <span className="text-yellow-500">Straight out of the oven, straight to you.</span>
       </h1>
-      {username === ''
-        ? <CreateUser />
-        : <Button to='/menu'>Continue ordering, {username}</Button>
-      }
-
+      {username === '' ? <CreateUser /> : <Button to="/menu">Continue ordering, {username}</Button>}
     </div>
   )
 }

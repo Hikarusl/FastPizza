@@ -1,34 +1,26 @@
-import Button from "../../ui/Button";
-import {useDispatch} from "react-redux";
-import {decreaseItemQuantity, increaseItemQuantity} from "./cartSlice.ts";
+import Button from '../../ui/Button'
+import { useDispatch } from 'react-redux'
+import { decreaseItemQuantity, increaseItemQuantity } from './cartSlice.ts'
 
 interface UpdateCartItemProps {
-  id: number;
-  quantity: number;
+  id: number
+  quantity: number
 }
 
-function UpdateCartItemQuantity ({ id, quantity }: UpdateCartItemProps) {
-  const dispatch = useDispatch();
+function UpdateCartItemQuantity({ id, quantity }: UpdateCartItemProps) {
+  const dispatch = useDispatch()
 
   return (
-    <div className='flex gap-1 items-center md:gap-3'>
-      <Button
-        type='round'
-        onClick={() =>
-          dispatch(decreaseItemQuantity(id))}
-      >
+    <div className="flex items-center gap-1 md:gap-3">
+      <Button type="round" onClick={() => dispatch(decreaseItemQuantity(id))}>
         -
       </Button>
       <span className="text-sm font-medium">{quantity}</span>
-      <Button
-        type='round'
-        onClick={() =>
-          dispatch(increaseItemQuantity(id))}
-      >
+      <Button type="round" onClick={() => dispatch(increaseItemQuantity(id))}>
         +
       </Button>
     </div>
   )
 }
 
-export default UpdateCartItemQuantity;
+export default UpdateCartItemQuantity

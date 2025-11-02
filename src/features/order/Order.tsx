@@ -1,52 +1,44 @@
 import { calcMinutesLeft, formatCurrency, formatDate } from '../../utils/helpers'
 import { getOrder } from '../../services/apiRestaurant'
-import {useFetcher, useLoaderData} from 'react-router'
-import type {LoaderFunctionArgs} from 'react-router'
-import type {OrderType} from '../../types/order.ts'
-import OrderItem from "./OrderItem.tsx";
-import {useEffect} from "react";
-import type {Pizza} from "../../types/pizza.ts";
-import UpdateOrder from "./UpdateOrder.tsx";
+import { useFetcher, useLoaderData } from 'react-router'
+import type { LoaderFunctionArgs } from 'react-router'
+import type { OrderType } from '../../types/order.ts'
+import OrderItem from './OrderItem.tsx'
+import { useEffect } from 'react'
+import type { Pizza } from '../../types/pizza.ts'
+import UpdateOrder from './UpdateOrder.tsx'
 
 function Order() {
   const order: OrderType = useLoaderData()
   const fetcher = useFetcher<Pizza[]>()
 
-  useEffect(():void => {
+  useEffect((): void => {
     if (!fetcher.data && fetcher.state === 'idle') {
       void fetcher.load('/menu')
     }
   }, [fetcher])
 
-  const {
-    id,
-    status,
-    priority,
-    priorityPrice,
-    orderPrice,
-    estimatedDelivery,
-    cart
-  } = order
+  const { id, status, priority, priorityPrice, orderPrice, estimatedDelivery, cart } = order
   const deliveryIn = calcMinutesLeft(estimatedDelivery)
 
   return (
-    <div className="px-4 py-6 space-y-8">
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 className="text-xl font-semibold" >Order № {id} status</h2>
+    <div className="space-y-8 px-4 py-6">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="text-xl font-semibold">Order № {id} status</h2>
 
-        <div className="space-x-2" >
-          {priority
-            && <span className="rounded-full bg-red-500 px-3 py-1 text-sm font-semibold uppercase tracking-wide text-red-50">
+        <div className="space-x-2">
+          {priority && (
+            <span className="rounded-full bg-red-500 px-3 py-1 text-sm font-semibold tracking-wide text-red-50 uppercase">
               Priority
-          </span>
-          }
-          <span className="rounded-full bg-green-500 px-3 py-1 text-sm font-semibold uppercase tracking-wide text-green-50">
+            </span>
+          )}
+          <span className="rounded-full bg-green-500 px-3 py-1 text-sm font-semibold tracking-wide text-green-50 uppercase">
             {status} order
           </span>
         </div>
       </div>
 
-      <div className="flex items-center justify-between flex-wrap gap-2 bg-stone-200 px-6 py-5">
+      <div className="flex flex-wrap items-center justify-between gap-2 bg-stone-200 px-6 py-5">
         <p className="font-medium">
           {deliveryIn >= 0
             ? `Only ${calcMinutesLeft(estimatedDelivery)} minutes left 😃`
@@ -57,8 +49,8 @@ function Order() {
         </p>
       </div>
 
-      <ul className='dive-stone-200 divide-y border-b border-t'>
-        {cart.map((item) =>
+      <ul className="dive-stone-200 divide-y border-t border-b">
+        {cart.map(item => (
           <OrderItem
             item={item}
             key={item.pizzaId}
@@ -67,33 +59,32 @@ function Order() {
               fetcher?.data?.find(menuItem => menuItem.id === item.pizzaId)?.ingredients ?? []
             }
           />
-          )
-        }
+        ))}
       </ul>
 
       <div className="space-y-2 bg-stone-200 px-6 py-5">
         <p className="text-sm font-medium text-stone-600">
           Price pizza: {formatCurrency(orderPrice)}
         </p>
-        {priority
-          && <p className="text-sm font-medium text-stone-600">
+        {priority && (
+          <p className="text-sm font-medium text-stone-600">
             Price priority: {formatCurrency(priorityPrice)}
-        </p>
-        }
+          </p>
+        )}
         <p className="font-bold">
           To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}
         </p>
       </div>
 
-      { !priority && <UpdateOrder />}
+      {!priority && <UpdateOrder />}
     </div>
   )
 }
 
-export async function loader({ params } :LoaderFunctionArgs):Promise<OrderType> {
-  const { orderId } = params;
+export async function loader({ params }: LoaderFunctionArgs): Promise<OrderType> {
+  const { orderId } = params
   if (!orderId) {
-    throw new Response("Order ID is missing", { status: 400 });
+    throw new Response('Order ID is missing', { status: 400 })
   }
   return await getOrder(orderId)
 }

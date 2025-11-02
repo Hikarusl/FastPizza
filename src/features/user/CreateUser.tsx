@@ -1,8 +1,8 @@
-import {type FormEvent, useState} from 'react'
-import Button from "../../ui/Button.tsx";
-import {updateName} from "./userSlice.ts";
-import {useDispatch} from "react-redux";
-import {useNavigate} from "react-router";
+import { type FormEvent, useState } from 'react'
+import Button from '../../ui/Button.tsx'
+import { updateName } from './userSlice.ts'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router'
 
 function CreateUser() {
   const [username, setUsername] = useState('')
@@ -15,7 +15,6 @@ function CreateUser() {
     if (!username) return
     dispatch(updateName(username))
     navigate('/menu')
-
   }
 
   return (
@@ -25,7 +24,7 @@ function CreateUser() {
       </p>
 
       <input
-        className='input w-72 mb-8'
+        className="input mb-8 w-72"
         type="text"
         placeholder="Your full name"
         value={username}

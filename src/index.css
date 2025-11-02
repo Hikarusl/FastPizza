@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: "Roboto Mono", monospace;
+  --font-sans: 'Roboto Mono', monospace;
   --text-huge: 80rem;
   --text-huge--line-height: 1;
 }
@@ -9,7 +9,7 @@
 /* Применяем глобальные стили через base layer */
 @layer base {
   html {
-    font-family: var(--font-sans),  "Roboto", sans-serif;
+    font-family: var(--font-sans), 'Roboto', sans-serif;
     height: 100dvh;
   }
 }

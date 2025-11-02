@@ -1,26 +1,17 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  type PayloadAction
-} from "@reduxjs/toolkit";
-import type {FetchAddressResult, UserState} from "./storeTypes.ts";
-import {GeolocationService} from "../../services/GeolocationService.ts";
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { FetchAddressResult, UserState } from './storeTypes.ts'
+import { GeolocationService } from '../../services/GeolocationService.ts'
 
-export const fetchAddress = createAsyncThunk<
-  FetchAddressResult,
-  void,
-  { rejectValue: string }
->(
-  "user/fetchAddress",
+export const fetchAddress = createAsyncThunk<FetchAddressResult, void, { rejectValue: string }>(
+  'user/fetchAddress',
   async (_, { rejectWithValue }) => {
     try {
-      return await GeolocationService.fetchAddress();
+      return await GeolocationService.fetchAddress()
     } catch (err) {
-      return rejectWithValue(err instanceof Error ? err.message : "Failed to fetch address");
+      return rejectWithValue(err instanceof Error ? err.message : 'Failed to fetch address')
     }
   }
-);
-
+)
 
 const initialState: UserState = {
   username: '',
@@ -35,26 +26,25 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateName: (state, action: PayloadAction<string>) => {
-      state.username = action.payload;
-    }
+      state.username = action.payload
+    },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(fetchAddress.pending, (state, _) => {
         state.status = 'loading'
-    })
-      .addCase(fetchAddress.fulfilled, (state,action ) => {
-        state.status = 'idle';
-        state.position = action.payload.position;
-        state.address = action.payload.address;
-    })
-      .addCase(fetchAddress.rejected, (state,action) => {
-        state.status = 'error';
-        state.error = action.payload ?? 'Unknown error';
       })
-
+      .addCase(fetchAddress.fulfilled, (state, action) => {
+        state.status = 'idle'
+        state.position = action.payload.position
+        state.address = action.payload.address
+      })
+      .addCase(fetchAddress.rejected, (state, action) => {
+        state.status = 'error'
+        state.error = action.payload ?? 'Unknown error'
+      })
   },
 })
 
-export const { updateName } = userSlice.actions;
-export default userSlice.reducer;
+export const { updateName } = userSlice.actions
+export default userSlice.reducer
