@@ -3,36 +3,23 @@ import {
   createSlice,
   type PayloadAction
 } from "@reduxjs/toolkit";
-import {getAddress} from "../../services/apiGeocoding.ts";
 import type {FetchAddressResult, UserState} from "./storeTypes.ts";
-
-export function getPosition(): Promise<GeolocationPosition> {
-  return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(resolve, reject)
-  })
-}
+import {GeolocationService} from "../../services/GeolocationService.ts";
 
 export const fetchAddress = createAsyncThunk<
-  FetchAddressResult,      //тип данных, возвращаемых из thunk
-  void,                    //аргументы (в нашем случае — ничего)
+  FetchAddressResult,
+  void,
   { rejectValue: string }
 >(
-  'user/fetchAddress',
+  "user/fetchAddress",
   async (_, { rejectWithValue }) => {
     try {
-      const positionObj = await getPosition();
-      const position = {
-        latitude: positionObj.coords.latitude,
-        longitude: positionObj.coords.longitude,
-      };
-      const addressObj = await getAddress(position);
-      const address = `${addressObj?.locality}, ${addressObj?.city} ${addressObj?.postcode}, ${addressObj?.countryName}`;
-      return { position, address };
+      return await GeolocationService.fetchAddress();
     } catch (err) {
-      return rejectWithValue('Failed to fetch address');
+      return rejectWithValue(err instanceof Error ? err.message : "Failed to fetch address");
     }
   }
-  )
+);
 
 
 const initialState: UserState = {

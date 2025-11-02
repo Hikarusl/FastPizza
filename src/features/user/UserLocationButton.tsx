@@ -1,16 +1,11 @@
-import {useDispatch} from "react-redux";
-import {fetchAddress} from "./userSlice.ts";
-import type {AppDispatch} from "../../store/store.ts";
 import Button from "../../ui/Button.tsx";
+import {useUserLocation} from "../../hooks/useUserLocation.ts";
 
 const  UserLocationButton = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const { getLocation, status } = useUserLocation();
 
   return (
-    <Button type='small' onClick={(e) => {
-      e.preventDefault();
-      dispatch(fetchAddress())
-    }}>
+    <Button type='small' onClick={getLocation} disabled={status === "loading"}>
       Get Position
     </Button>
   )

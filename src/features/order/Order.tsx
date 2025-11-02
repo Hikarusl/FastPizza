@@ -6,6 +6,7 @@ import type {OrderType} from '../../types/order.ts'
 import OrderItem from "./OrderItem.tsx";
 import {useEffect} from "react";
 import type {Pizza} from "../../types/pizza.ts";
+import UpdateOrder from "./UpdateOrder.tsx";
 
 function Order() {
   const order: OrderType = useLoaderData()
@@ -83,6 +84,8 @@ function Order() {
           To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}
         </p>
       </div>
+
+      { !priority && <UpdateOrder />}
     </div>
   )
 }
