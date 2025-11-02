@@ -7,10 +7,10 @@ import {clearCart} from "../cart/cartSlice.ts";
 interface OrderItemProps {
   item: CartItemType;
   isLoadingIngredients?: boolean;
-  ingredients?: string[];
+  ingredients: string[];
 }
 
-function OrderItem({ item, } : OrderItemProps) {
+function OrderItem({ item, ingredients, isLoadingIngredients} : OrderItemProps) {
   const { quantity, name, totalPrice } = item
   const dispatch = useDispatch();
 
@@ -26,6 +26,12 @@ function OrderItem({ item, } : OrderItemProps) {
         </p>
         <p className="font-bold" >{formatCurrency(totalPrice)}</p>
       </div>
+      <p className='text-sm capitalize ilatic text-stone-500'>
+        {isLoadingIngredients
+          ? 'Loading...'
+          : ingredients.join(', ')
+        }
+      </p>
     </li>
   )
 }

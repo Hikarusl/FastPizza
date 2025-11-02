@@ -1,13 +1,22 @@
-// Test ID: IIDSAT
 import { calcMinutesLeft, formatCurrency, formatDate } from '../../utils/helpers'
 import { getOrder } from '../../services/apiRestaurant'
-import {useLoaderData} from 'react-router'
+import {useFetcher, useLoaderData} from 'react-router'
 import type {LoaderFunctionArgs} from 'react-router'
 import type {OrderType} from '../../types/order.ts'
 import OrderItem from "./OrderItem.tsx";
+import {useEffect} from "react";
+import type {Pizza} from "../../types/pizza.ts";
 
 function Order() {
   const order: OrderType = useLoaderData()
+  const fetcher = useFetcher<Pizza[]>()
+
+  useEffect(():void => {
+    if (!fetcher.data && fetcher.state === 'idle') {
+      void fetcher.load('/menu')
+    }
+  }, [fetcher])
+
   const {
     id,
     status,
@@ -52,8 +61,10 @@ function Order() {
           <OrderItem
             item={item}
             key={item.pizzaId}
-            isLoadingIngredients={false}
-            // ingredients={}
+            isLoadingIngredients={fetcher.state === 'loading'}
+            ingredients={
+              fetcher?.data?.find(menuItem => menuItem.id === item.pizzaId)?.ingredients ?? []
+            }
           />
           )
         }

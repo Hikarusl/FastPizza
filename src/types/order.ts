@@ -1,15 +1,5 @@
 import type {CartType} from "./cart.ts";
 
-// export interface OrderType {
-//   id: string;
-//   status: string;
-//   priority: boolean;
-//   priorityPrice: number;
-//   orderPrice: number;
-//   estimatedDelivery: string;
-//   cart: CartType,
-// }
-
 // То что вводит пользователь в форму
 export interface FormOrderType {
   customer: string;
